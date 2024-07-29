@@ -7,7 +7,7 @@ class Request {
     public readonly array $body;
     public readonly array $header;
     public readonly array $cookies;
-    public array $url;
+    public array $uri;
 
 
     public function __construct() {

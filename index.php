@@ -6,8 +6,6 @@ $dotenv->load();
 // Funções para facilitar e templates
 require_once(dirname(__FILE__) ."/utils/bootstrap.php");
 
-// Configuração do ambiente
-require_once(dirname(__FILE__) ."/config/bootstrap.php");
 // A aplicação
 require_once(dirname(__FILE__) ."/app/bootstrap.php");
 // Rotas validas

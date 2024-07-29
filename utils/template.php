@@ -1,4 +1,5 @@
 <?php
+use App\Http\Collection;
 
 class Template {
     public function __construct(
@@ -8,7 +9,10 @@ class Template {
         private array $cookies = []
     ) {}
 
-    public function json(string | array $json) {
+    public function json(Collection | string | array $json) {
+        if(is_object($json)) {
+            $json = $json->attributes;
+        }
         $this->content = $json;
         
         return $this->setHeaders([
@@ -30,13 +34,29 @@ class Template {
         return $this;
     }
 
-    public function setCookie(array $cookie) {
-        $this->cookies[$cookie[0]] = $cookie[1];
+    public function setCookie(
+        string $name,
+        string $value,
+        string $duration,
+        string $path = '/',
+        string $domain = '',
+        bool $secure = false,
+        bool $httponly = false,
+    ) {
+        $this->cookies[$name] = [
+            'name' => $name,
+            'value' => $value,
+            'duration' => $duration,
+            'path' => $path,
+            'domain' => $domain,
+            'secure' => $secure,
+            'httponly' => $httponly,
+        ];
 
         return $this;
     }
 
-    public function load() {
+    public function render() {
         http_response_code($this->status);
 
         foreach($this->headers as $header => $value) {
@@ -49,7 +69,7 @@ class Template {
             setcookie(
                 $cookie['name'],
                 $cookie['value'],
-                $cookie['duration'],
+                time() + $cookie['duration'],
                 $cookie['path'],
                 $cookie['domain'],
                 $cookie['secure'],
@@ -57,6 +77,7 @@ class Template {
             );
         }
 
-        return $this->content;
+        echo json_encode($this->content);
+        exit(0);
     }
 }

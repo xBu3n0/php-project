@@ -25,7 +25,7 @@ class Handler {
                 $matches = $matches[1];
 
                 for($i = 0; $i < count($params); $i++) {
-                    $this->request->url[$params[$i]] = $matches[$i];
+                    $this->request->uri[$params[$i]] = $matches[$i];
                 }
 
                 $controller = new $route['controller'][0]($this->request);
@@ -37,6 +37,14 @@ class Handler {
             }
         }
 
-        exit(404);
+        $view = response()
+            ->setStatus(404)
+            ->json([
+                "status"=> 404,
+                "message"=> "Route not found"
+            ]);
+
+        $view->render();
+        exit(0);
     }
 }
