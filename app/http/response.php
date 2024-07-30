@@ -20,6 +20,8 @@ class Response {
                     
                     break;
                 case Collection::class:
+                    http_response_code(200);
+                    header('Content-Type: application/json');
                     echo json_encode($view->attributes);
 
                     break;

@@ -17,4 +17,8 @@ class UserService {
     public function getById($id): Collection {
         return $this->userProvider->getById($id);
     }
+
+    public function create(array $data): Collection {
+        return $this->userProvider->create($data);
+    }
 }

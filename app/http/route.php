@@ -2,12 +2,11 @@
 
 namespace App\Http;
 
-$_PATH = $_GET['path'];
-
-enum HttpMethods {
-    case GET;
-    case PUT;
-    case DELETE;
+enum HttpMethods: string {
+    case GET = 'GET';
+    case POST = 'POST';
+    case PUT = 'PUT';
+    case DELETE = 'DELETE';
 }
 
 final class Route {
@@ -40,8 +39,8 @@ final class Route {
 
 
         self::$routes[] = [
-            'method' => 'get',
-            'path' => $uri,
+            'method' => $method,
+            'uri' => $uri,
             'params' => $matches[1],
             'controller' => $controller,
             'middleware' => [],
@@ -52,6 +51,10 @@ final class Route {
 
     static public function get(string $uri, array $controller = []) {
         return self::createRoute(HttpMethods::GET, $uri, $controller);
+    }
+
+    static public function post(string $uri, array $controller = []) {
+        return self::createRoute(HttpMethods::POST, $uri, $controller);
     }
 
     static public function put(string $uri, array $controller = []) {

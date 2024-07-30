@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__) ."/collection.php");
+require_once(dirname(__FILE__) ."/DataTransferObject.php");
 require_once(dirname(__FILE__) ."/database.php");
 
 require_once(dirname(__FILE__) ."/provider.php");

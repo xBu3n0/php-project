@@ -5,6 +5,6 @@ use App\Http\Route;
 
 Route::get("/as/{id}/{username}/{password}", ['', '']);
 
-Route::get('/user', [UserController::class, 'index']);
-Route::put('/user', [UserController::class, 'create']);
-Route::get('/user/{id}', [UserController::class, 'show']);
+Route::get('/users', [UserController::class, 'index']);
+Route::post('/users', [UserController::class, 'create']);
+Route::get('/users/{id}', [UserController::class, 'show']);

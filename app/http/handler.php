@@ -9,10 +9,10 @@ class Handler {
     ) {}
 
     public function handle(): void {
-        $path = '/' . trim($_GET['path'], '/');
+        $uri = '/' . trim($_GET['uri'], '/');
 
         foreach(Route::$routes as $route) {
-            if(preg_match($route['path'], $path)) {
+            if(preg_match($route['uri'], $uri) && $route['method']->value == $_SERVER['REQUEST_METHOD']) {
                 foreach($route['middleware'] as $middleware) {
                     if($middleware->handle($this->request) === false) {
                         exit(0);
@@ -21,7 +21,7 @@ class Handler {
 
                 $params = $route['params'];
 
-                preg_match_all($route['path'], $path, $matches);
+                preg_match_all($route['uri'], $uri, $matches);
                 $matches = $matches[1];
 
                 for($i = 0; $i < count($params); $i++) {

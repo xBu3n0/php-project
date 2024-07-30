@@ -12,7 +12,7 @@ class Request {
 
     public function __construct() {
         $this->query = $_GET;
-        $this->body = $_POST;
+        $this->body = (array) json_decode(file_get_contents('php://input'));
         $this->header = getallheaders();
         $this->cookies = $_COOKIE;
     }

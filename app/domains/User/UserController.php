@@ -3,6 +3,7 @@ namespace App\Domains\User;
 
 use App\Http\Controller;
 use App\Http\Request;
+use CreateUserDTO;
 
 class UserController extends Controller {
     public function __construct(
@@ -20,12 +21,17 @@ class UserController extends Controller {
         $user = $this->UserService->getById($this->request->uri['id']);
         
         return $user;
-        // return response()
-        //     ->json($user)
-        //     ->setStatus(200);
     }
 
     public function create() {
+        $user = new CreateUserDTO(...$this->request->body);
 
+        $user->validate();
+
+        $user = $this->UserService->create($user->toArray());
+
+        return response()
+            ->json($user)
+            ->setStatus(201);
     }
 }

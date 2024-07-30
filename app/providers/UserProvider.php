@@ -23,4 +23,19 @@ class UserProvider extends Provider {
             SQL)
         );
     }
+
+    public function create(array $data) : Collection {
+        $username = $data['username'];
+        $password = $data['password'];
+        $email = $data['email'];
+
+        $created = UserProvider::query(<<<SQL
+        INSERT INTO users(username, email, password) VALUES('$username', '$email', '$password') RETURNING id;
+        SQL);
+
+        return new Collection([
+            'id' => $created[0]['id'],
+            ...$data
+        ]);
+    }
 }
