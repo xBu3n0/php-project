@@ -5,7 +5,9 @@ class CreateUserDTO implements DataTransferObject {
     public function __construct(
         public string $username,
         public string $email,
+        #[\SensitiveParameter]
         public string $password,
+        public bool $admin,
         ...$garbage
     ) {}
     
@@ -13,7 +15,8 @@ class CreateUserDTO implements DataTransferObject {
         return [
             "username"=> $this->username,
             "email"=> $this->email,
-            "password"=> $this->password
+            "password"=> $this->password,
+            "admin"=> $this->admin
         ];
     }
 

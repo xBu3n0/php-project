@@ -8,32 +8,44 @@ class Handler {
         private readonly Response $response = new Response(),
     ) {}
 
-    public function handle(): void {
+    private function initUriInfo(array $route, string $uri) {
+        $params = $route['params'];
+
+        preg_match_all($route['uri'], $uri, $matches);
+        
+        if(isset($matches[1])) {
+            $matches = $matches[1];
+
+            for($i = 0; $i < count($params); $i++) {
+                $this->request->uri[$params[$i]] = $matches[$i];
+            }
+        }
+    }
+
+    private function runMiddlewares(array $middlewares) {
+        foreach($middlewares as $middleware) {
+            $m = new $middleware();
+            
+            if($m->handle($this->request) === false) {
+                exit(0);
+            }
+        }
+    }
+
+    public function handle() {
         $uri = '/' . trim($_GET['uri'], '/');
 
         foreach(Route::$routes as $route) {
             if(preg_match($route['uri'], $uri) && $route['method']->value == $_SERVER['REQUEST_METHOD']) {
-                foreach($route['middleware'] as $middleware) {
-                    if($middleware->handle($this->request) === false) {
-                        exit(0);
-                    }
-                }
+                $this->initUriInfo($route, $uri);
 
-                $params = $route['params'];
-
-                preg_match_all($route['uri'], $uri, $matches);
-                $matches = $matches[1];
-
-                for($i = 0; $i < count($params); $i++) {
-                    $this->request->uri[$params[$i]] = $matches[$i];
-                }
+                $this->runMiddlewares($route['middlewares']);
 
                 $controller = new $route['controller'][0]($this->request);
                 $method = $route['controller'][1];
-
                 $this->response->render($controller->$method($this->request));
-
-                exit(0);
+                
+                return;
             }
         }
 
@@ -45,6 +57,6 @@ class Handler {
             ]);
 
         $view->render();
-        exit(0);
+        return;
     }
 }

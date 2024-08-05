@@ -7,7 +7,7 @@ class Provider {
     
     public function __construct() {}
 
-    public function query(string $query) {
-        return \Database::connection($this->connection)->query($query);
+    public function query(string $query, array $options = []) {
+        return \Database::connection($this->connection)->query($query, $options);
     }
 }

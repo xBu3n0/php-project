@@ -11,6 +11,7 @@ enum HttpMethods: string {
 
 final class Route {
     static public array $routes = [];
+    static protected int $size = 0;
     static private array $wildCards = [];
 
     private static function createRoute(HttpMethods $method, string $uri, array $controller = []) {
@@ -43,10 +44,11 @@ final class Route {
             'uri' => $uri,
             'params' => $matches[1],
             'controller' => $controller,
-            'middleware' => [],
+            'middlewares' => [],
         ];
+        self::$size += 1;
 
-        return self::class;
+        return new Route();
     }
 
     static public function get(string $uri, array $controller = []) {
@@ -63,5 +65,9 @@ final class Route {
 
     static public function delete(string $uri, array $controller = []) {
         return self::createRoute(HttpMethods::DELETE, $uri, $controller);
+    }
+
+    public function middleware(string $middleware) {
+        self::$routes[self::$size-1]['middlewares'][] = $middleware;
     }
 }

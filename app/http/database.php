@@ -25,7 +25,23 @@ class Database {
         return $DB;
     }
 
-    public function query(string $query) : array {
-        return $this->pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    public function query(string $query, array $options = []) : array {
+        $stmt = $this->pdo->prepare($query);
+
+        foreach($options as $k => $v) {
+            $stmt->bindValue($k, $this->sanitize($v));
+        }
+        
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function sanitize(mixed $value) {
+        if(is_string($value)) {
+            $value = str_replace("'", "''", $value);
+        }
+
+        return $value;
     }
 }

@@ -23,15 +23,29 @@ class UserController extends Controller {
         return $user;
     }
 
-    public function create() {
+    public function store() {
         $user = new CreateUserDTO(...$this->request->body);
 
         $user->validate();
 
-        $user = $this->UserService->create($user->toArray());
+        $user = $this->UserService->create($user);
 
         return response()
             ->json($user)
             ->setStatus(201);
+    }
+
+    public function validateLogin() {
+        $user = $this->request->user;
+        $body = $this->request->body;
+
+        $password = $body['password'];
+
+        $split = explode('.', $user['password']);
+
+        $salt = $split[0];
+        $hashed = $split[1];
+
+        return validatePassword($password, $salt, $hashed);
     }
 }

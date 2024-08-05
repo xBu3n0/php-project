@@ -4,7 +4,7 @@ namespace App\Http;
 use Template;
 
 class Response {
-
+    // Remover a classe Template e criar de forma que tudo vire response
     public function __construct() {}
 
 

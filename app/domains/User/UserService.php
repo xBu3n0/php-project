@@ -2,13 +2,12 @@
 namespace App\Domains\User;
 use App\Http\Collection;
 use App\Providers\UserProvider;
+use CreateUserDTO;
 
 class UserService {
     public function __construct(
         private UserProvider $userProvider = new UserProvider()
-    ) {
-
-    }
+    ) {}
     
     public function all(): Collection {
         return $this->userProvider->all();
@@ -18,7 +17,9 @@ class UserService {
         return $this->userProvider->getById($id);
     }
 
-    public function create(array $data): Collection {
-        return $this->userProvider->create($data);
+    public function create(CreateUserDTO $user): Collection {
+        $user->password = createPassword($user->password);
+
+        return $this->userProvider->create($user->toArray());
     }
 }
